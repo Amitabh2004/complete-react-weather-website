@@ -1,0 +1,255 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #0b131e;
+}
+.flex {
+  display: flex;
+  flex-direction: row;
+  margin-top: 22px;
+  margin-left: 20px;
+  height: 100%;
+  width: 100%;
+}
+.flex .flex-1 {
+  display: flex;
+}
+.flex .flex-2 {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+  flex: 1;
+  max-width: 1000px;
+}
+.flex .flex-3 {
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 460px;
+  margin-right: 50px;
+}
+.searchbar-div {
+  display: flex;
+  width: 100%;
+}
+.searchbar-div .search-bar {
+  background-color: #232e3e;
+  border: none;
+  padding: 15px 7px;
+  border-radius: 13px;
+  font-weight: 600;
+  font-size: 12px;
+  width: 100%;
+}
+.searchbar-div .search-bar::placeholder {
+  color: rgb(220, 220, 220);
+}
+.temp-box {
+  display: flex;
+  color: rgb(228, 228, 228);
+  flex-direction: row;
+  padding-top: 30px;
+  padding-left: 40px;
+  padding-right: 20px;
+  margin-bottom: 23px;
+  justify-content: space-between;
+}
+.temp-box .statistics-box {
+  display: flex;
+  flex-direction: column;
+}
+.temp-box .city-box {
+  display: flex;
+  flex-direction: column;
+}
+.city-box .city-text {
+  font-size: 36px;
+  font-weight: 600;
+}
+.city-box .chance-text {
+  font-size: 13px;
+  color: rgb(151, 150, 150);
+  line-height: 26px;
+}
+.city-box .degree-text {
+  font-size: 63px;
+  font-weight: 600;
+  padding-top: 52px;
+  color: white;
+}
+.todays-forecast-box {
+    display: flex;
+    flex-direction: column;
+    background-color: #232e3e;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+.big-forecast-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-top: 18px;
+}
+
+.big-forecast-box .small-cond-img {
+    width: 55px;
+}
+
+.big-forecast-box .forecast-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.forecast-text {
+    color: rgb(151, 150, 150);
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.forecast-box .forecast-temp {
+    color: white;
+    font-size: 20px;
+    margin-top: 16px;
+    font-weight: 600;
+}
+
+.forecast-box .time {
+    color: rgb(151, 150, 150);
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.vertical-line {
+    width: 1px;
+    background-color: rgba(255, 255, 255, 0.5); 
+    margin: 0 13px; 
+}
+
+.air-condition-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #232e3e;
+  margin-top: 20px;
+  padding: 20px 20px 0px 20px;
+  border-radius: 20px;
+}
+.air-condition-box .one-flex {
+  display: flex;
+  flex-direction: column;
+}
+.air-condition-box .two-three-main-flex {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+}
+.air-condition-box .tp-flex {
+  display: flex;
+  flex: 1;
+}
+.air-condition-box .two-flex {
+  display: flex;
+  flex-direction: column;
+  padding-top: 27px;
+}
+.air-condition-box .three-flex {
+  display: flex;
+  flex-direction: column;
+}
+.air-condition-box .real-feel-box {
+  display: flex;
+  padding-bottom: 12px;
+}
+.air-condition-box .real-feel-img-box {
+  display: flex;
+  flex-direction: column;
+}
+.air-condition-box .real-feel-statistics {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+}
+.air-condition-box .air-condition-text {
+  color: rgb(151, 150, 150);
+  font-size: 10px;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+.real-feel-statistics .feel-text {
+  color: rgb(151, 150, 150);
+  font-size: 15px;
+}
+.real-feel-statistics .feel-temp {
+  color: white;
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 33px;
+}
+.real-feel-img-box .feel-img {
+  width: 16px;
+}
+.three-flex .see-more-btn {
+  border: none;
+  color: white;
+  background-color: rgb(33, 99, 231);
+  border-radius: 20px;
+  padding: 6px 10px;
+  font-weight: 600;
+  margin-top: -5px;
+  cursor: pointer;
+}
+.three-flex .see-more-btn:hover {
+  opacity: 0.8;
+}
+.sevenday-box {
+  display: flex;
+  flex-direction: column;
+  background-color: #232e3e;
+  color: rgb(151, 150, 150);
+  border-radius: 20px;
+  padding: 20px 38px 0px 38px;
+  height: 86.5%;
+  margin-left: 20px;
+  margin-top: 70px;
+  justify-content: space-evenly;
+}
+
+.sevenday-box .sevenday-text {
+  color: rgb(151, 150, 150);
+  font-size: 10px;
+  font-weight: 600;
+  margin-top: -20px;
+}
+.sevenday-box .seven-img {
+  width: 55px;
+  margin-right: 20px;
+}
+.sevenday-box .text-box {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sevenday-box .cond-box {
+  display: flex;
+  align-items: center;
+}
+.sevenday-box .seven-cond-text {
+  color: white;
+  font-weight: 600;
+}
+.sevenday-box .statistics-text-1 {
+  color: white;
+}
+.sevenday-box .statistics-text-2 {
+  font-size: 15px;
+}
+.horizontal-line{
+    width: 100%;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.5); 
+    margin: 10px 0;
+}

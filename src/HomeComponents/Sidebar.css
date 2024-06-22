@@ -1,0 +1,31 @@
+
+.side-bar{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #232e3e;
+    font-family: Arial, Helvetica, sans-serif;
+    border-radius: 25px;
+    padding: 24px 18px;
+    /* height: 100%; */
+
+}
+.side-bar .logo-img{
+    width: 45px;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+.side-bar .page-link{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color:rgb(151, 150, 150);
+    font-size: 13px;
+}
+.side-bar .bars-div{
+    margin: 12px 0px;
+}
+.side-bar .bars-div .bar-img{
+    margin-bottom: 10px;
+}
