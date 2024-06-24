@@ -1,5 +1,8 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
+import axios from 'axios';
 import "./main.css";
+import * as openWeatherApi from "../API'S/openWeatherApi"
+import useIPLocation from "../API'S/IPLocation ";
 import SideBar from "./Sidebar";
 import SearchBar from "./SearchBar";
 import SunnyImg from "../images/Sunny.png";
@@ -8,45 +11,100 @@ import WindImg from "../images/Winds.png";
 import DropImg from "../images/RainDrop.png";
 import SunImg from "../images/Sun.png";
 
+
 export default function Main() {
+  const [weatherData, setWeatherData] = useState(null);
+  const [forecastData, setForecastData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const locationData = useIPLocation();
+
+  useEffect(() => {
+    const fetchInitialWeather = async () => {
+      if (locationData) {
+        try {
+          const { lat, lon } = locationData;
+          const [weather, forecast] = await openWeatherApi.fetchWeatherData(
+            lat,
+            lon
+          );
+          setWeatherData(weather);
+          console.log(weather);
+          setForecastData(forecast);
+        } catch (error) {
+          console.error("Error fetching initial weather data:", error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchInitialWeather();
+  }, [locationData]);
+
+  const handleCityNameChange = async (city) => {
+    const { latitude, longitude } = city;
+    try {
+      setLoading(true);
+      const [weather, forecast] = await openWeatherApi.fetchWeatherData(
+        latitude,
+        longitude
+      );
+      setWeatherData(weather);
+      setForecastData(forecast);
+    } catch (error) {
+      console.error("Error fetching weather data", error);
+      setWeatherData(null);
+      setForecastData(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex">
       <div className="flex-1">
         <SideBar />
       </div>
       <div className="flex-2">
-        <SearchBar />
-        <Temperature />
+        <SearchBar handleCityNameChange={handleCityNameChange} />
+        <Temperature weatherData={weatherData} loading={loading} />
         <TodaysForecast />
         <Airconditions />
       </div>
       <div className="flex-3">
-        <SevenDayForecast/>
+        <SevenDayForecast />
       </div>
     </div>
   );
 }
 
-function Temperature() {
+function Temperature({ weatherData, loading }) {
+  if (loading) return <div>Loading...</div>;
+
+  if (!weatherData) return <div>No data available</div>;
+
   return (
     <div className="temp-box">
       <div className="statistics-box">
         <div className="city-box">
-          <span className="city-text">Madrid</span>
-          <span className="chance-text">Chance of rain: 0&#37;</span>
-          <span className="degree-text">31&deg;</span>
+          <span className="city-text">{weatherData.name}</span>
+          <span className="chance-text">
+            Chance of rain:{" "}
+            {weatherData.rain ? `${weatherData.rain["1h"]}%` : "0%"}
+          </span>
+          <span className="degree-text">{`${Math.round(
+            weatherData.main.temp
+          )}°C`}</span>
         </div>
       </div>
       <div className="img-box">
-        <img
-          src={SunnyImg}
-          alt="weather-condition loading.."
-          className="cond-img"
-        />
+        <img src={SunnyImg} alt="weather-condition" className="cond-img" />
       </div>
     </div>
   );
 }
+
 
 function TodaysForecast() {
   return (

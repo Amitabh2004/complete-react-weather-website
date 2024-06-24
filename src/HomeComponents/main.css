@@ -76,54 +76,54 @@ body {
   color: white;
 }
 .todays-forecast-box {
-    display: flex;
-    flex-direction: column;
-    background-color: #232e3e;
-    padding: 20px;
-    border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  background-color: #232e3e;
+  padding: 20px;
+  border-radius: 20px;
 }
 
 .big-forecast-box {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    margin-top: 18px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin-top: 18px;
 }
 
 .big-forecast-box .small-cond-img {
-    width: 55px;
+  width: 55px;
 }
 
 .big-forecast-box .forecast-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .forecast-text {
-    color: rgb(151, 150, 150);
-    font-size: 10px;
-    font-weight: 600;
+  color: rgb(151, 150, 150);
+  font-size: 10px;
+  font-weight: 600;
 }
 
 .forecast-box .forecast-temp {
-    color: white;
-    font-size: 20px;
-    margin-top: 16px;
-    font-weight: 600;
+  color: white;
+  font-size: 20px;
+  margin-top: 16px;
+  font-weight: 600;
 }
 
 .forecast-box .time {
-    color: rgb(151, 150, 150);
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 16px;
+  color: rgb(151, 150, 150);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 16px;
 }
 
 .vertical-line {
-    width: 1px;
-    background-color: rgba(255, 255, 255, 0.5); 
-    margin: 0 13px; 
+  width: 1px;
+  background-color: rgba(255, 255, 255, 0.5);
+  margin: 0 13px;
 }
 
 .air-condition-box {
@@ -219,7 +219,6 @@ body {
   color: rgb(151, 150, 150);
   font-size: 10px;
   font-weight: 600;
-  margin-top: -20px;
 }
 .sevenday-box .seven-img {
   width: 55px;
@@ -247,9 +246,9 @@ body {
 .sevenday-box .statistics-text-2 {
   font-size: 15px;
 }
-.horizontal-line{
-    width: 100%;
-    height: 1px;
-    background-color: rgba(255, 255, 255, 0.5); 
-    margin: 10px 0;
+.horizontal-line {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.5);
+  margin: 10px 0;
 }
