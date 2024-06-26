@@ -5,11 +5,27 @@ import * as openWeatherApi from "../API'S/openWeatherApi"
 import useIPLocation from "../API'S/IPLocation ";
 import SideBar from "./Sidebar";
 import SearchBar from "./SearchBar";
-import SunnyImg from "../images/Sunny.png";
+import SunnyImg from "../images/icons/01d.png";
+import ClearSkyNight from "../images/icons/01n.png";
+import FewCloudsDay from "../images/icons/02d.png";
+import FewCloudsNight from "../images/icons/02n.png";
+import ScatteredClouds from "../images/icons/03d.png"; 
+import BrokenClouds from "../images/icons/04d.png";
+import ShowerRain from "../images/icons/09d.png"; 
+import RainDay from "../images/icons/10d.png";
+import RainNight from "../images/icons/10n.png";
+import Thunderstorm from "../images/icons/11d.png";
+import Snow from "../images/icons/13d.png"; 
+import Mist from "../images/icons/50d.png"; 
+import UnknownWeather from "../images/icons/unknown.png";
 import ThermometerImg from "../images/Thermometer.png";
 import WindImg from "../images/Winds.png";
 import DropImg from "../images/RainDrop.png";
-import SunImg from "../images/Sun.png";
+import HumidityImg from "../images/Humidity.png";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
+import LinearProgress from "@mui/material/LinearProgress";
+import convertTo12HourFormat from "./utilities.js/convertTo12HourFormat";
 
 
 export default function Main() {
@@ -31,6 +47,7 @@ export default function Main() {
           setWeatherData(weather);
           console.log(weather);
           setForecastData(forecast);
+          console.log(forecast);
         } catch (error) {
           console.error("Error fetching initial weather data:", error);
         } finally {
@@ -62,27 +79,104 @@ export default function Main() {
   };
 
   return (
-    <div className="flex">
-      <div className="flex-1">
-        <SideBar />
-      </div>
-      <div className="flex-2">
-        <SearchBar handleCityNameChange={handleCityNameChange} />
-        <Temperature weatherData={weatherData} loading={loading} />
-        <TodaysForecast />
-        <Airconditions />
-      </div>
-      <div className="flex-3">
-        <SevenDayForecast />
+    <div>
+      {loading && (
+        <Box sx={{ width: "100%", position: "fixed", top: 0, left: 0 }}>
+          <LinearProgress />
+        </Box>
+      )}
+      <div className="flex">
+        <div className="flex-1">
+          <SideBar />
+        </div>
+        <div className="flex-2-3-main">
+        <div className="flex-2">
+          <SearchBar handleCityNameChange={handleCityNameChange} />
+          <Temperature weatherData={weatherData} loading={loading} forecastData={forecastData}/>
+          <TodaysForecast loading={loading} forecastData={forecastData} />
+          <Airconditions weatherData={weatherData} forecastData={forecastData} loading={loading}/>
+        </div>
+        <div className="flex-3">
+          <SevenDayForecast />
+        </div>
+        </div>
       </div>
     </div>
   );
 }
 
-function Temperature({ weatherData, loading }) {
-  if (loading) return <div>Loading...</div>;
+ function getWeatherIcon(iconCode) {
+  let iconUrl;
 
-  if (!weatherData) return <div>No data available</div>;
+  switch (iconCode) {
+    case "01d":
+      iconUrl = SunnyImg;
+      break;
+    case "01n":
+      iconUrl = ClearSkyNight;
+      break;
+    case "02d":
+      iconUrl = FewCloudsDay;
+      break;
+    case "02n":
+      iconUrl = FewCloudsNight;
+      break;
+    case "03d":
+    case "03n":
+      iconUrl = ScatteredClouds;
+      break;
+    case "04d":
+    case "04n":
+      iconUrl = BrokenClouds;
+      break;
+    case "09d":
+    case "09n":
+      iconUrl = ShowerRain;
+      break;
+    case "10d":
+      iconUrl = RainDay;
+      break;
+    case "10n":
+      iconUrl = RainNight;
+      break;
+    case "11d":
+    case "11n":
+      iconUrl = Thunderstorm;
+      break;
+    case "13d":
+    case "13n":
+      iconUrl = Snow;
+      break;
+    case "50d":
+    case "50n":
+      iconUrl = Mist;
+      break;
+    default:
+      iconUrl = UnknownWeather;
+      break;
+  }
+
+  return iconUrl;
+}
+
+function Temperature({ weatherData, loading ,forecastData}) {
+
+  if (!weatherData || !forecastData) {
+    return (
+      <div style={{height:"100%", margin:"60px 0px" ,display:"flex",alignItems:"center",justifyContent:"center"}}>
+         <CircularProgress />
+      </div>
+    );
+  }
+    let chanceOfRain = "0%";
+    if (forecastData && forecastData.list && forecastData.list.length > 0) {
+      const firstForecast = forecastData.list[0];
+      if (firstForecast.pop && firstForecast.pop !== undefined) {
+        chanceOfRain = `${Math.round(firstForecast.pop * 100)}%`;
+      }
+    }
+
+const iconUrl = getWeatherIcon(weatherData.weather[0].icon);
 
   return (
     <div className="temp-box">
@@ -90,8 +184,7 @@ function Temperature({ weatherData, loading }) {
         <div className="city-box">
           <span className="city-text">{weatherData.name}</span>
           <span className="chance-text">
-            Chance of rain:{" "}
-            {weatherData.rain ? `${weatherData.rain["1h"]}%` : "0%"}
+            Chance of rain:{" "}{chanceOfRain}
           </span>
           <span className="degree-text">{`${Math.round(
             weatherData.main.temp
@@ -99,30 +192,57 @@ function Temperature({ weatherData, loading }) {
         </div>
       </div>
       <div className="img-box">
-        <img src={SunnyImg} alt="weather-condition" className="cond-img" />
+        <img src={iconUrl} alt="weather-condition" className="cond-img" />
       </div>
     </div>
   );
 }
 
 
-function TodaysForecast() {
+function TodaysForecast({loading , forecastData}) {
+    if (loading || !forecastData) {
+      return (
+        <div
+          style={{
+            height: "100%",
+            margin: "60px 0px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <CircularProgress />
+        </div>
+      );
+    }
+
+
   return (
     <div className="todays-forecast-box">
       <div className="forecast-text-box">
         <span className="forecast-text">TODAY'S FORECAST</span>
         <div className="big-forecast-box">
-          <ForecastComponent />
-          <VerticalLine />
-          <ForecastComponent />
-          <VerticalLine />
-          <ForecastComponent />
-          <VerticalLine />
-          <ForecastComponent />
-          <VerticalLine />
-          <ForecastComponent />
-          <VerticalLine />
-          <ForecastComponent />
+          <div className="f-1-div">
+            {forecastData.list.slice(1, 4).map((forecast, index) => (
+              <React.Fragment key={index}>
+                <VerticalLine />
+                <ForecastComponent forecast={forecast} 
+                forecastData={forecastData}
+                />
+              </React.Fragment>
+            ))}
+            <VerticalLine />
+          </div>
+          <div className="f-2-div">
+            {forecastData.list.slice(4, 7).map((forecast, index) => (
+              <React.Fragment key={index}>
+                <VerticalLine />
+                <ForecastComponent forecast={forecast}
+                forecastData={forecastData} />
+              </React.Fragment>
+            ))}
+            <VerticalLine />
+          </div>
         </div>
       </div>
     </div>
@@ -134,17 +254,50 @@ function VerticalLine(){
     );
 }
 
-function ForecastComponent() {
+function ForecastComponent({forecast,forecastData}) {
+  if(!forecastData){
+    return null;
+  }
+  const isNow = forecast === forecastData.list[1];
+  const dateTime = new Date(forecast.dt_txt);
+  const temp_time = dateTime.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  const time = isNow? "Now": convertTo12HourFormat(temp_time);
+
+  const iconUrl = getWeatherIcon(forecast.weather[0].icon);
+  const temperature = Math.round((forecast.main.temp));
   return (
     <div className="forecast-box">
-      <span className="time">6:00 AM</span>
-      <img src={SunnyImg} alt="img.." className="small-cond-img" />
-      <span className="forecast-temp">25&deg;</span>
+      <span className="time">{time}</span>
+      <img src={iconUrl} alt="img.." className="small-cond-img" />
+      <span className="forecast-temp">{temperature}&deg;</span>
     </div>
   );
 }
 
-function Airconditions() {
+function Airconditions({ weatherData, loading, forecastData }) {
+
+  if (!weatherData || !forecastData) {
+    return null;
+  }
+
+  const realFeel = weatherData.main
+    ? `${Math.round(weatherData.main.feels_like)}°`
+    : "";
+
+  let chanceOfRain = "0%";
+  if (forecastData && forecastData.list && forecastData.list.length > 0) {
+    const firstForecast = forecastData.list[0];
+    if (firstForecast.pop && firstForecast.pop !== undefined) {
+      chanceOfRain = `${Math.round(firstForecast.pop * 100)}%`;
+    }
+  }
+
+  const windSpeed = weatherData.wind ? `${weatherData.wind.speed} km/h` : "";
+  const pressure = weatherData.main ? `${weatherData.main.humidity}%` : "";
+
   return (
     <div className="air-condition-box">
       <div className="one-flex">
@@ -152,25 +305,27 @@ function Airconditions() {
         <AirconditionComponent
           icon={ThermometerImg}
           text="Real Feel"
-          statistics="30&deg;"
+          statistics={realFeel}
         />
         <AirconditionComponent
           icon={DropImg}
           text="Chance of rain"
-          statistics="0%;"
+          statistics={chanceOfRain}
         />
       </div>
-      <div className="tp-flex">
-        
-      </div>
+      <div className="tp-flex"></div>
       <div className="two-three-main-flex">
         <div className="two-flex">
           <AirconditionComponent
             icon={WindImg}
             text="Wind"
-            statistics="0.2 km/h"
+            statistics={windSpeed}
           />
-          <AirconditionComponent icon={SunImg} text="UV Index" statistics="3" />
+          <AirconditionComponent
+            icon={HumidityImg}
+            text="Humidity"
+            statistics={pressure}
+          />
         </div>
         <div className="three-flex">
           <button className="see-more-btn">See more</button>
@@ -179,6 +334,7 @@ function Airconditions() {
     </div>
   );
 }
+
 
 function AirconditionComponent({ icon, text, statistics }) {
   return (

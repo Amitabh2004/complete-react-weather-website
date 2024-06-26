@@ -14,20 +14,16 @@ export default function SearchBar({ handleCityNameChange }) {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
 
-  const handleInputChange = (input) => {
+  const handleInputChange = async (input) => {
     setQuery(input);
-    fetchSuggestions(input);
-  };
-
-  const fetchSuggestions = async (input) => {
-    if (input.length < 3) {
+    if (input.length < 1) {
       setSuggestions([]);
       return;
     }
 
     try {
       const response = await axios.get(
-        `${GEO_API_URL}/cities?minPopulation=10000&namePrefix=${input}`,
+        `${GEO_API_URL}/cities?minPopulation=1000&namePrefix=${input}`,
         GEO_API_OPTIONS
       );
 
@@ -44,6 +40,15 @@ export default function SearchBar({ handleCityNameChange }) {
     }
   };
 
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter" && query.length > 0 && suggestions.length > 0) {
+      const selectedCity = suggestions[0]; // Assuming the first suggestion is selected
+      handleCityNameChange(selectedCity);
+      setQuery(""); // Clear the input after selecting a suggestion
+      setSuggestions([]); // Clear suggestions
+    }
+  };
+
   const handleSuggestionClick = (name, latitude, longitude) => {
     setQuery(name);
     setSuggestions([]);
@@ -56,26 +61,30 @@ export default function SearchBar({ handleCityNameChange }) {
         type="text"
         value={query}
         onChange={(e) => handleInputChange(e.target.value)}
+        onKeyPress={handleKeyPress}
         placeholder="Search for cities"
         className="search-bar"
       />
-      <ul>
-        {suggestions.map((suggestion, index) => (
-          <li
-            key={index}
-            onClick={() =>
-              handleSuggestionClick(
-                suggestion.name,
-                suggestion.latitude,
-                suggestion.longitude
-              )
-            }
-            className="suggestion-list-element"
-          >
-            {suggestion.name}, {suggestion.countryCode}
-          </li>
-        ))}
-      </ul>
+
+      {suggestions.length > 0 && (
+        <ul className="list-div">
+          {suggestions.map((suggestion, index) => (
+            <li
+              key={index}
+              onClick={() =>
+                handleSuggestionClick(
+                  suggestion.name,
+                  suggestion.latitude,
+                  suggestion.longitude
+                )
+              }
+              className="suggestion-list-element"
+            >
+              {suggestion.name}, {suggestion.countryCode}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

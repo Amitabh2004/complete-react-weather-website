@@ -2,6 +2,7 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   background-color: #0b131e;
 }
+/* Base styles */
 .flex {
   display: flex;
   flex-direction: row;
@@ -9,37 +10,116 @@ body {
   margin-left: 20px;
   height: 100%;
   width: 100%;
+  box-sizing: border-box; /* Ensures padding and border are included in the element's total width and height */
 }
+
 .flex .flex-1 {
   display: flex;
+  box-sizing: border-box;
 }
+
+.flex-2-3-main {
+  display: flex;
+  flex: 1;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1260px) {
+  .flex-2-3-main {
+    flex-direction: column;
+    width:100%;
+  }
+  .searchbar-div{
+    margin-right: 15px;
+  }
+  .flex .flex-2{
+    width: 95%;
+    margin-right: 10px;
+  }
+  .flex .flex-3{
+   width:97%;
+  }
+  .big-forecast-box{
+    flex-direction: column;
+  }
+  .big-forecast-box .f-2-div{
+    margin-top: 30px;
+  }
+  .todays-forecast-box {
+    margin-bottom: 50px ;
+    margin-top: 20px;
+  }
+  .sevenday-box .sevenday-text-box{
+    margin-bottom: 20px;
+  }
+  .forecast-box .forecast-text{
+    margin-bottom: 20px;
+  }
+}
+
 .flex .flex-2 {
   display: flex;
   flex-direction: column;
   margin-left: 20px;
-  flex: 1;
+  margin-right: 20px;
+  flex: 1 500px;
   max-width: 1000px;
+  box-sizing: border-box;
 }
+
 .flex .flex-3 {
   display: flex;
   flex-direction: column;
   flex: 0 1 460px;
   margin-right: 50px;
+  box-sizing: border-box;
 }
+
 .searchbar-div {
+  position: relative; /* Ensure this element is the positioning context */
   display: flex;
-  width: 100%;
+  flex-direction: column;
 }
-.searchbar-div .search-bar {
+
+.list-div {
+  position: absolute; 
+  top: 40px;
+  left:0px;
+  right:0px;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  background-color: white;
+  z-index: 100;
+  border-radius: 10px;
+}
+
+.suggestion-list-element {
+
+  /* border: 1px solid black; */
+  color: #0b131e;
+  padding: 8px 12px; 
+}
+
+.suggestion-list-element:hover {
+  opacity: 0.7;
+  background-color: #606a78;
+  color:white;
+}
+
+.search-bar {
   background-color: #232e3e;
   border: none;
   padding: 15px 7px;
   border-radius: 13px;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 14px;
   width: 100%;
+  color: white;
 }
-.searchbar-div .search-bar::placeholder {
+
+.search-bar::placeholder {
   color: rgb(220, 220, 220);
 }
 .temp-box {
@@ -59,6 +139,9 @@ body {
 .temp-box .city-box {
   display: flex;
   flex-direction: column;
+}
+.temp-box .cond-img{
+  width: 160px;
 }
 .city-box .city-text {
   font-size: 36px;
@@ -85,11 +168,24 @@ body {
 
 .big-forecast-box {
   display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
   margin-top: 18px;
+  flex-wrap: wrap;
 }
+.big-forecast-box .f-1-div,
+.big-forecast-box .f-2-div{
+  display: flex;
+  justify-content: space-between;
+  flex:1;
+}
+@media (min-width:1261px) {
+  .big-forecast-box .f-2-div div:first-of-type {
+    display: none;
+  }
+  .big-forecast-box .f-2-div div:nth-of-type(2){
+    margin-left: 20px;
+  }
 
+}
 .big-forecast-box .small-cond-img {
   width: 55px;
 }
@@ -187,7 +283,7 @@ body {
   line-height: 33px;
 }
 .real-feel-img-box .feel-img {
-  width: 16px;
+  width: 19px;
 }
 .three-flex .see-more-btn {
   border: none;
