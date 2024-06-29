@@ -23,7 +23,8 @@ export const fetchWeatherData = async (lat, lon) => {
         },
       }),
     ]);
-
+    console.log(weatherResponse.data);
+    console.log(forecastResponse.data);
     return [weatherResponse.data, forecastResponse.data];
   } catch (error) {
     console.error("Error fetching weather data: ", error);

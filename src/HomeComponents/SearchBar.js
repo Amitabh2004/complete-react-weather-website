@@ -13,9 +13,11 @@ const GEO_API_OPTIONS = {
 export default function SearchBar({ handleCityNameChange }) {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
+  const [error,setError] = useState("");
 
   const handleInputChange = async (input) => {
     setQuery(input);
+    setError("");
     if (input.length < 1) {
       setSuggestions([]);
       return;
@@ -26,14 +28,15 @@ export default function SearchBar({ handleCityNameChange }) {
         `${GEO_API_URL}/cities?minPopulation=1000&namePrefix=${input}`,
         GEO_API_OPTIONS
       );
-
+      
       const cities = response.data.data.map((city) => ({
         name: city.name,
         countryCode: city.countryCode,
         latitude: city.latitude,
         longitude: city.longitude,
       }));
-
+      if(cities.length===0) setError("No cities found");
+      else setError("");
       setSuggestions(cities);
     } catch (error) {
       console.log("Error fetching city suggestions: ", error);
@@ -46,6 +49,7 @@ export default function SearchBar({ handleCityNameChange }) {
       handleCityNameChange(selectedCity);
       setQuery(""); // Clear the input after selecting a suggestion
       setSuggestions([]); // Clear suggestions
+      setError("");
     }
   };
 
@@ -65,7 +69,7 @@ export default function SearchBar({ handleCityNameChange }) {
         placeholder="Search for cities"
         className="search-bar"
       />
-
+      {error && <div className="error-msg">{error}</div>}
       {suggestions.length > 0 && (
         <ul className="list-div">
           {suggestions.map((suggestion, index) => (

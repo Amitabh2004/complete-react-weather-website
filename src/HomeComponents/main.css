@@ -6,8 +6,8 @@ body {
 .flex {
   display: flex;
   flex-direction: row;
-  margin-top: 22px;
-  margin-left: 20px;
+  margin-top: 17.5px;
+  margin-left: 17px;
   height: 100%;
   width: 100%;
   box-sizing: border-box; /* Ensures padding and border are included in the element's total width and height */
@@ -72,7 +72,7 @@ body {
   display: flex;
   flex-direction: column;
   flex: 0 1 460px;
-  margin-right: 50px;
+  margin-right: 40px;
   box-sizing: border-box;
 }
 
@@ -81,7 +81,18 @@ body {
   display: flex;
   flex-direction: column;
 }
-
+.error-msg{
+  position: absolute; 
+  top: 40px;
+  left:0px;
+  right:0px;
+  background-color: white;
+  color: #0b131e;
+  padding: 8px 9px;
+  font-size: 18px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
 .list-div {
   position: absolute; 
   top: 40px;
@@ -92,12 +103,11 @@ body {
   margin: 0;
   background-color: white;
   z-index: 100;
-  border-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
 .suggestion-list-element {
-
-  /* border: 1px solid black; */
   color: #0b131e;
   padding: 8px 12px; 
 }
@@ -199,7 +209,7 @@ body {
 .forecast-text {
   color: rgb(151, 150, 150);
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 800;
 }
 
 .forecast-box .forecast-temp {
@@ -269,7 +279,7 @@ body {
 .air-condition-box .air-condition-text {
   color: rgb(151, 150, 150);
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 800;
   margin-bottom: 14px;
 }
 .real-feel-statistics .feel-text {
@@ -288,7 +298,7 @@ body {
 .three-flex .see-more-btn {
   border: none;
   color: white;
-  background-color: rgb(33, 99, 231);
+  background-color: rgb(59, 115, 226);
   border-radius: 20px;
   padding: 6px 10px;
   font-weight: 600;
@@ -314,7 +324,7 @@ body {
 .sevenday-box .sevenday-text {
   color: rgb(151, 150, 150);
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 800;
 }
 .sevenday-box .seven-img {
   width: 55px;
@@ -327,7 +337,17 @@ body {
   align-items: center;
   justify-content: space-between;
 }
-
+.sevenday-box .div-1-seven{
+  display: flex;
+  align-items: center;
+  flex:0.6;
+}
+.sevenday-box .div-2-seven{
+  display: flex;
+  align-items: center;
+  flex:1;
+  justify-content: space-between;
+}
 .sevenday-box .cond-box {
   display: flex;
   align-items: center;

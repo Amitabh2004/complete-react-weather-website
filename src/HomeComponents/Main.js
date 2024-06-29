@@ -45,9 +45,7 @@ export default function Main() {
             lon
           );
           setWeatherData(weather);
-          console.log(weather);
           setForecastData(forecast);
-          console.log(forecast);
         } catch (error) {
           console.error("Error fetching initial weather data:", error);
         } finally {
@@ -77,6 +75,9 @@ export default function Main() {
       setLoading(false);
     }
   };
+  const aggregatedData = forecastData
+    ? aggregateDailyData(groupDataByDay(forecastData))
+    : [];
 
   return (
     <div>
@@ -90,15 +91,23 @@ export default function Main() {
           <SideBar />
         </div>
         <div className="flex-2-3-main">
-        <div className="flex-2">
-          <SearchBar handleCityNameChange={handleCityNameChange} />
-          <Temperature weatherData={weatherData} loading={loading} forecastData={forecastData}/>
-          <TodaysForecast loading={loading} forecastData={forecastData} />
-          <Airconditions weatherData={weatherData} forecastData={forecastData} loading={loading}/>
-        </div>
-        <div className="flex-3">
-          <SevenDayForecast />
-        </div>
+          <div className="flex-2">
+            <SearchBar handleCityNameChange={handleCityNameChange} />
+            <Temperature
+              weatherData={weatherData}
+              loading={loading}
+              forecastData={forecastData}
+            />
+            <TodaysForecast loading={loading} forecastData={forecastData} />
+            <Airconditions
+              weatherData={weatherData}
+              forecastData={forecastData}
+              loading={loading}
+            />
+          </div>
+          <div className="flex-3">
+            <SevenDayForecast forecast={aggregatedData} />
+          </div>
         </div>
       </div>
     </div>
@@ -350,21 +359,16 @@ function AirconditionComponent({ icon, text, statistics }) {
   );
 }
 
-function SevenDayForecast() {
+function SevenDayForecast({ forecast }) {
   return (
     <div className="sevenday-box">
       <span className="sevenday-text">7-DAY FORECAST</span>
-      <SevenDayComponent />
-      <HorizontalLine />
-      <SevenDayComponent />
-      <HorizontalLine />
-      <SevenDayComponent />
-      <HorizontalLine />
-      <SevenDayComponent />
-      <HorizontalLine />
-      <SevenDayComponent />
-      <HorizontalLine />
-      <SevenDayComponent />
+      {forecast.map((day, index) => (
+        <React.Fragment key={index}>
+          <SevenDayComponent day={day} isToday={index === 0} />
+          {index < forecast.length - 1 && <HorizontalLine />}
+        </React.Fragment>
+      ))}
     </div>
   );
 }
@@ -374,20 +378,101 @@ function HorizontalLine(){
         </div>
     );
 }
-function SevenDayComponent() {
+// Group data by day
+const groupDataByDay = (data) => {
+  const days = {};
+
+  data.list.forEach(item => {
+    const date = new Date(item.dt * 1000).toISOString().split('T')[0]; // Convert Unix timestamp to date
+    if (!days[date]) {
+      days[date] = [];
+    }
+    days[date].push(item);
+  });
+
+  return days;
+};
+
+// Aggregate daily data
+const aggregateDailyData = (groupedData) => {
+  const dailyData = [];
+
+  for (const date in groupedData) {
+    const dayData = groupedData[date];
+    const daySummary = {
+      date: date,
+      dayOfWeek: new Date(date).toLocaleDateString("en-US", {
+        weekday: "long",
+      }),
+      avgTemp: 0,
+      minTemp: Infinity,
+      maxTemp: -Infinity,
+      condition: "",
+      icon: "",
+    };
+
+    const weatherConditions = {};
+    const weatherIcons = {};
+
+    dayData.forEach((item) => {
+      daySummary.avgTemp += item.main.temp;
+      if (item.main.temp_min < daySummary.minTemp) {
+        daySummary.minTemp = item.main.temp_min;
+      }
+      if (item.main.temp_max > daySummary.maxTemp) {
+        daySummary.maxTemp = item.main.temp_max;
+      }
+
+      const condition = item.weather[0].main;
+      weatherConditions[condition] = (weatherConditions[condition] || 0) + 1;
+
+      const icon = item.weather[0].icon;
+      weatherIcons[icon] = (weatherIcons[icon] || 0) + 1;
+    });
+
+    daySummary.avgTemp /= dayData.length;
+
+    // Determine the most frequent weather condition
+    daySummary.condition = Object.keys(weatherConditions).reduce((a, b) =>
+      weatherConditions[a] > weatherConditions[b] ? a : b
+    );
+
+    // Determine the most frequent weather icon
+    daySummary.icon = Object.keys(weatherIcons).reduce((a, b) =>
+      weatherIcons[a] > weatherIcons[b] ? a : b
+    );
+
+    dailyData.push(daySummary);
+  }
+
+  return dailyData;
+};
+
+
+function SevenDayComponent({ day, isToday }) {
+  const max_temp = Math.round(day.maxTemp);
+  const min_temp = Math.round(day.minTemp);
+  const iconUrl = getWeatherIcon(day.icon);
   return (
     <div className="big-box">
       <div className="text-box">
-        <span className="seven-text">Today</span>
-        <div className="cond-box">
-          <img src={SunnyImg} className="seven-img" />
-          <span className="seven-cond-text">Sunny</span>
+        <div className="div-1-seven">
+          <span className="seven-text">
+            {isToday ? "Today" : day.dayOfWeek}
+          </span>
         </div>
-        <div className="min-max-div">
-          <span className="statistics-text-1">36</span>
-          <span className="statistics-text-2">/21</span>
+        <div className="div-2-seven">
+          <div className="cond-box">
+            <img src={iconUrl} className="seven-img" alt={day.condition} />
+            <span className="seven-cond-text">{day.condition}</span>
+          </div>
+          <div className="min-max-div">
+            <span className="statistics-text-1">{max_temp}</span>
+            <span className="statistics-text-2">/{min_temp}</span>
+          </div>
         </div>
       </div>
     </div>
   );
 }
+
